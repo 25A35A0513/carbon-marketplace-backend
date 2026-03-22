@@ -7,7 +7,7 @@ const {
 } = require('../controllers/adminController');
 const {
   getAllContacts, getContactStats, updateContactStatus, deleteContact,
-} = require('../controllers/ContactController');
+} = require('../controllers/contactController');          // ✅ fixed casing
 const { protect, authorize } = require('../middleware/auth');
 const {
   verifyProjectRules, updateUserStatusRules, paginationRules, validate,
@@ -18,24 +18,24 @@ const { body, param, query } = require('express-validator');
 router.use(protect, authorize('admin'));
 
 // ── Platform stats ────────────────────────────────────────
-router.get('/stats',                  getStats);
+router.get('/stats', getStats);
 
 // ── Projects ──────────────────────────────────────────────
-router.get('/projects',               paginationRules,       validate, getAllProjects);
-router.put('/projects/:id/verify',    verifyProjectRules,    validate, verifyProject);
+router.get('/projects',            paginationRules,       validate, getAllProjects);
+router.put('/projects/:id/verify', verifyProjectRules,    validate, verifyProject);
 
 // ── Users ─────────────────────────────────────────────────
-router.get('/users',                  paginationRules,       validate, getAllUsers);
-router.patch('/users/:id/status',     updateUserStatusRules, validate, updateUserStatus);
+router.get('/users',               paginationRules,       validate, getAllUsers);
+router.patch('/users/:id/status',  updateUserStatusRules, validate, updateUserStatus);
 
 // ── Transactions ──────────────────────────────────────────
-router.get('/transactions',           paginationRules,       validate, getAllTransactions);
+router.get('/transactions',        paginationRules,       validate, getAllTransactions);
 
-// ── Contact messages (inbox) ──────────────────────────────
+// ── Contact messages inbox ────────────────────────────────
 router.get('/contacts/stats', getContactStats);
 router.get('/contacts', [
   query('page').optional().isInt({ min: 1 }).toInt(),
-  query('limit').optional().isInt({ min: 1, max: 500 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 1000 }).toInt(),
   query('status').optional().isIn(['new','read','replied','archived']),
   query('inquiryType').optional().isIn(['buyer','seller','platform','partner','press','other']),
 ], validate, getAllContacts);

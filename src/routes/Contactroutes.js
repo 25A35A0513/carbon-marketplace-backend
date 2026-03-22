@@ -7,13 +7,12 @@ const {
   getContactStats,
   updateContactStatus,
   deleteContact,
-} = require('../controllers/ContactController');
+} = require('../controllers/contactController');          // ✅ fixed casing
 
 const { protect, authorize } = require('../middleware/auth');
 const { body, param, query, validationResult } = require('express-validator');
 const { sendError } = require('../utils/response');
 
-// ── Validation ────────────────────────────────────────────
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return sendError(res, 'Validation failed', 422, errors.array());
@@ -35,18 +34,16 @@ const updateRules = [
   body('adminNotes').optional().isString().isLength({ max: 1000 }),
 ];
 
-// ── Public: submit a contact message ─────────────────────
-// No auth required — anyone can submit. Token is read manually
-// in the controller if present, but never required.
+// Public — no auth required
 router.post('/', submitRules, validate, submitContact);
 
-// ── Admin: view & manage messages ────────────────────────
-router.get(  '/stats',  protect, authorize('admin'), getContactStats);
-router.get(  '/',       protect, authorize('admin'), [
+// Admin only
+router.get('/stats',  protect, authorize('admin'), getContactStats);
+router.get('/',       protect, authorize('admin'), [
   query('page').optional().isInt({ min: 1 }).toInt(),
-  query('limit').optional().isInt({ min: 1, max: 500 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 1000 }).toInt(),
 ], validate, getAllContacts);
-router.patch('/:id',    protect, authorize('admin'), updateRules, validate, updateContactStatus);
-router.delete('/:id',   protect, authorize('admin'), param('id').isMongoId(), validate, deleteContact);
+router.patch('/:id',  protect, authorize('admin'), updateRules,  validate, updateContactStatus);
+router.delete('/:id', protect, authorize('admin'), param('id').isMongoId(), validate, deleteContact);
 
 module.exports = router;
