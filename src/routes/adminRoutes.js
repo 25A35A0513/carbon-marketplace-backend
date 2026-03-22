@@ -7,7 +7,7 @@ const {
 } = require('../controllers/adminController');
 const {
   getAllContacts, getContactStats, updateContactStatus, deleteContact,
-} = require('../controllers/ContactController');          // ✅ fixed casing
+} = require('../controllers/contactController');          // ✅ fixed casing
 const { protect, authorize } = require('../middleware/auth');
 const {
   verifyProjectRules, updateUserStatusRules, paginationRules, validate,
