@@ -7,7 +7,7 @@ const {
   getContactStats,
   updateContactStatus,
   deleteContact,
-} = require('../controllers/Contactcontroller');
+} = require('../controllers/ContactController');
 
 const { protect, authorize } = require('../middleware/auth');
 const { body, param, query, validationResult } = require('express-validator');
